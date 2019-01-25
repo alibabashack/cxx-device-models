@@ -243,15 +243,26 @@ constexpr SetResetMask toResetMask(PinMask pm) {
     return static_cast<SetResetMask> (static_cast<uint32_t> (pm) << 16);
 }
 
-class PinMaskAssignableReg {
+class InputDataReg {
 public:
 
-    PinMaskAssignableReg& operator=(gpio::PinId pid) {
+    operator PinMask() {
+        return static_cast<PinMask> (rawReg);
+    }
+
+private:
+    volatile uint32_t rawReg;
+};
+
+class OutputDataReg {
+public:
+
+    OutputDataReg& operator=(PinId pid) {
         rawReg = (1 << static_cast<size_t> (pid));
         return *this;
     }
 
-    PinMaskAssignableReg& operator=(gpio::PinMask pm) {
+    OutputDataReg& operator=(PinMask pm) {
         rawReg = static_cast<uint32_t> (pm);
         return *this;
     }
@@ -304,11 +315,11 @@ private:
 struct GpioRegs {
     PortConfigLowReg CRL;
     PortConfigHighReg CRH;
-    PinMaskAssignableReg IDR;
-    PinMaskAssignableReg ODR;
+    InputDataReg IDR;
+    OutputDataReg ODR;
     SetResetMaskReg BSRR;
-    PinMaskAssignableReg BRR;
-    volatile uint32_t LCKR;
+    volatile uint32_t BRR; //TODO
+    volatile uint32_t LCKR; //TODO
 };
 
 static_assert(std::is_pod<GpioRegs>::value, "please issue a bug report!");

@@ -21,6 +21,7 @@ void main() {
             PinConfig::GeneralPushPullOutput>();
     gpioERegs->ODR = PinId::Px2;
     gpioERegs->ODR = (PinId::Px2 | PinId::Px3);
+    PinMask result = gpioERegs->IDR;
     gpioARegs->BSRR = toResetMask(PinId::Px0 | PinId::Px1) | toSetMask(PinId::Px2 | PinId::Px3);
 
     ///gpioARegs->ODR = PinId::Px0 | (PinId::Px1 | PinId::Px2);
